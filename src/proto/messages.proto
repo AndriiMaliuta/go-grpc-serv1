@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package messages;
+option go_package = "com.anma";
+
+message Message {
+    string body = 1;
+    string date = 2;
+    Comment Comment = 3;
+}
+
+message Comment {
+    string body = 1;
+}
