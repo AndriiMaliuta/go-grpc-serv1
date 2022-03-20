@@ -3,6 +3,7 @@ package main
 import (
 	com_anma "com.anma/src/com.anma"
 	"fmt"
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"log"
@@ -22,6 +23,8 @@ func main() {
 	ReadFromFile("msg", &msg2)
 	fmt.Println(msg2)
 
+	//jsnMsg := ToJson()
+	//fmt.Println(jsnMsg)
 }
 
 func ReadFromFile(fn string, msg *com_anma.Message) error {
@@ -43,4 +46,20 @@ func WriteToFile(file string, msg *com_anma.Message) error {
 	}
 	ioutil.WriteFile(file, out, 0644)
 	return nil
+}
+
+func ToJson(msg proto.Message) string {
+	marsh := jsonpb.Marshaler{}
+	out, err := marsh.MarshalToString(msg)
+	if err != nil {
+		return ""
+	}
+	return out
+}
+
+func fromJson(jsn string, pm proto.Message) {
+	err := jsonpb.UnmarshalString(jsn, pm)
+	if err != nil {
+		log.Println(err)
+	}
 }
