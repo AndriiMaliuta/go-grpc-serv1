@@ -17,14 +17,19 @@ func main() {
 	}
 
 	fmt.Println(msg)
+	WriteToFile("msg", &msg)
+	var msg2 = com_anma.Message{}
+	ReadFromFile("msg", &msg2)
+	fmt.Println(msg2)
+
 }
 
 func ReadFromFile(fn string, msg *com_anma.Message) error {
-	file, err := ioutil.ReadFile(fn)
+	bts, err := ioutil.ReadFile(fn)
 	if err != nil {
 		return err
 	}
-	err2 := proto.Unmarshal(file, msg)
+	err2 := proto.Unmarshal(bts, msg)
 	if err2 != nil {
 		fmt.Println("Error")
 	}
