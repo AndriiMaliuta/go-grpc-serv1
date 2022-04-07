@@ -1,12 +1,14 @@
 package main
 
 import (
-	com_anma "com.anma/src/com.anma"
+	com_anma "com.anma/com.anma"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/grpc"
+	"google.golang.org/protobuf/proto"
 	"io/ioutil"
 	"log"
+	"net"
 )
 
 func main() {
@@ -25,6 +27,15 @@ func main() {
 
 	//jsnMsg := ToJson()
 	//fmt.Println(jsnMsg)
+	listen, err := net.Listen("tcp", "0.0.0.0:50051")
+	if err != nil {
+		return
+	}
+	serv := grpc.Server{}
+	err = serv.Serve(listen)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func ReadFromFile(fn string, msg *com_anma.Message) error {
@@ -48,9 +59,9 @@ func WriteToFile(file string, msg *com_anma.Message) error {
 	return nil
 }
 
-func ToJson(msg proto.Message) string {
+func ToJson(msg *proto.Message) string {
 	marsh := jsonpb.Marshaler{}
-	out, err := marsh.MarshalToString(msg)
+	out, err := marsh.MarshalToString(&msg)
 	if err != nil {
 		return ""
 	}
